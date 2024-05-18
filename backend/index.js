@@ -20,11 +20,24 @@ app.post("/register", async (req, resp) => {
     let result = await user.save();
     result = result.toObject();
     delete result.password
-    resp.send(result);
-
     // resp.send('api in progress');
     // resp.send(req.body);
     // resp.send(result);
+ 
+    // resp.send(result);
+    Jwt.sign({ result }, jwtkey, { expiresIn: "2h" }, (err, token) => {
+                if (err) {
+                        resp.status(500).send({ result: "Jwt went wrong please try again" });
+                    } else {
+                        resp.status(200).send({ result, auth: token });
+                    }
+                });
+
+
+
+
+
+
 })
 
 app.post("/login", async (req, resp) => {
@@ -32,17 +45,15 @@ app.post("/login", async (req, resp) => {
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
-            Jwt.sign({user},jwtkey,{expiresIn:"2h"}, (err,token) => {
-                if(err){
-                    resp.send({ result: "Jwt went wrong please try again" })
-                }else{
-
-                    resp.send(user,{auth: token})
+            Jwt.sign({ user }, jwtkey, { expiresIn: "2h" }, (err, token) => {
+                if (err) {
+                    resp.status(500).send({ result: "Jwt went wrong please try again" });
+                } else {
+                    resp.status(200).send({ user, auth: token });
                 }
-
-            })
+            });
         } else {
-            resp.send({ result: "no User found" })
+            resp.status(404).send({ result: "no User found" });
         }
     } else {
         resp.send({ result: "no User found" })

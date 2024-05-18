@@ -28,9 +28,10 @@ const Login = () => {
         });
         result = await result.json()
         console.warn(result);
-        if(result.name)
+        if(result.auth)
             {
-                localStorage.setItem('user',JSON.stringify(result));
+                localStorage.setItem('user',JSON.stringify(result.auth));
+                localStorage.setItem('token',JSON.stringify(result.user));
                 navigate('/');
             }else{
                 setAlert({ message: 'Incorrect email or password', type: 'error' });
@@ -46,7 +47,7 @@ const Login = () => {
             <input className={style.inputBox} type="password" placeholder='Enter password' value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <button onClick={handleLogin} className={style.button}>Login</button>
-            {alert && <Alerts message={alert.message} type={alert.type} onClose={() => setAlert(null)} />}
+            {alert && <div class={style.ebox}><Alerts class={style.emessage} message={alert.message} type={alert.type} onClose={() => setAlert(null)} /></div>}
 
         </div>
     )

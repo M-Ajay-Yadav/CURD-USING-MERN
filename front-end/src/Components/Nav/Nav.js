@@ -17,10 +17,10 @@ const Nav = () => {
 
             {auth ?
                 <ul className={styles['nav-ul']}>
+                    <Link to='/profile'><img alt="logo" className={styles.logo} src="https://yt3.googleusercontent.com/ytc/AIdro_lpwLOOTumlQiiMYMHbBgJfQXVyRBGrZdTZ6NbtY-YA8wg=s176-c-k-c0x00ffffff-no-rj" /></Link>
                     <li><Link to='/'>Product</Link></li>
                     <li><Link to='/add'>Add product</Link></li>
                     {/* <li><Link to='/update'>Update product</Link></li> */}
-                    <Link to='/profile'><img alt="logo" className={styles.logo} src="https://yt3.googleusercontent.com/ytc/AIdro_lpwLOOTumlQiiMYMHbBgJfQXVyRBGrZdTZ6NbtY-YA8wg=s176-c-k-c0x00ffffff-no-rj" /></Link>
                     <li><Link to='/profile'>{JSON.parse(auth).name}</Link></li>
                     <li><Link onClick={logout} to='/login'>Logout</Link></li>
                 </ul>
