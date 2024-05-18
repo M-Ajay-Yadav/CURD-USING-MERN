@@ -1,0 +1,36 @@
+/* Alerts.css */
+.alertcontainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure alerts appear above other content */
+  }
+  
+  .alert {
+    display: flex;
+    align-items: center;
+  }
+  
+  .alertmessage {
+    flex: 1;
+  }
+  
+  .alertclose {
+    cursor: pointer;
+    padding: 5px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-left: 10px;
+  }
+  
+  .alertclose:hover {
+    background-color: #aaa;
+  }
+  
