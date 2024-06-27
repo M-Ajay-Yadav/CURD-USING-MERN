@@ -1,0 +1,45 @@
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+  }
+  
+  .profilePicture {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .userName {
+    font-size: 3em;
+    color: #0070f3;
+    margin: 0;
+  }
+  
+  .userBio {
+    font-size: 1.5em;
+    color: #333333;
+    text-align: center;
+    max-width: 600px;
+  }
+  
+  .socialLinks {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .socialLink {
+    margin: 0 10px;
+    font-size: 1.5em;
+    color: #0070f3;
+    text-decoration: none;
+  }
+  
+  .socialLink:hover {
+    color: #1A1A1D;
+  }
+  

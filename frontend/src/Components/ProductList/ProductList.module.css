@@ -1,0 +1,40 @@
+.ProductList {
+    font-family: Arial, sans-serif;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .heading {
+    text-align: center;
+    margin-top: 50px; 
+  }
+  
+  .ulist {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    display: flex; 
+    justify-content: space-around; 
+  }
+  
+  .list {
+    width: 20%; 
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  .searchbox{
+    width:400px;
+    margin:20px 20px 20px 30%;
+    height:40px;
+    border:2px solid skyblue;
+    padding-left: 20px;
+  
+  }
+  
+  @media (min-width: 768px) {
+    .list {
+      width: 25%; 
+    }
+  }
+  

@@ -8,7 +8,7 @@ const User = require('./db/User');
 const Product = require('./db/Product');
 
 const Jwt = require('jsonwebtoken');
-const jwtkey = 'e-comm';
+const jwtkey= 'e-comm';
 
 const app = express();
 
@@ -20,11 +20,7 @@ app.post("/register", async (req, resp) => {
     let result = await user.save();
     result = result.toObject();
     delete result.password
-    // resp.send('api in progress');
-    // resp.send(req.body);
-    // resp.send(result);
  
-    // resp.send(result);
     Jwt.sign({ result }, jwtkey, { expiresIn: "2h" }, (err, token) => {
                 if (err) {
                         resp.status(500).send({ result: "Jwt went wrong please try again" });
@@ -32,16 +28,9 @@ app.post("/register", async (req, resp) => {
                         resp.status(200).send({ result, auth: token });
                     }
                 });
-
-
-
-
-
-
 })
 
 app.post("/login", async (req, resp) => {
-    // resp.send(req.body)
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
@@ -70,9 +59,11 @@ app.get("/products", async (req, resp) => {
     try {
         const products = await Product.find();
         if (products.length > 0) {
-            resp.send(products)
+            console.log("from get products",products);
+            resp.status(200).send(products)
+
         } else {
-            resp.send({ result: "No product found" })
+            resp.status(400).send({ result: "No product found" })
         }
 
     } catch (error) {
@@ -81,7 +72,7 @@ app.get("/products", async (req, resp) => {
 });
 
 app.delete("/product/:id", async (req, resp) => {
-    // resp.send("working..")
+   
     let result = await Product.deleteOne({ _id: req.params.id });
     resp.send(result)
     console.log(result)
@@ -109,48 +100,67 @@ app.put("/product/:id", async (req, resp) => {
 
 });
 
-// app.get("/search/:key", async (req, resp) => {
-//     let result = await Product.find({
-//         "$or": [
-//             { name: { $regex: req.params.key } },
-//             { price: { $regex: req.params.key } },
-//             { description: { $regex: req.params.key } }
-//         ]
-//     });
 
-//     resp.send(result)
-// });
-app.get("/search/:key", async (req, resp) => {
+
+
+app.get("/search/:key" , async (req, resp) => {
     let key = req.params.key;
     let result = await Product.find({
         $or: [
-            { name: { $regex: new RegExp(key, "i") } }, // Case-insensitive regex for name
-            { price: parseFloat(key) || 0 }, // Convert key to float or default to 0
-            { description: { $regex: new RegExp(key, "i") } } // Case-insensitive regex for description
+            { name: { $regex: new RegExp(key, "i") } }, 
+            { price: parseFloat(key) || 0 }, 
+            { description: { $regex: new RegExp(key, "i") } } 
         ]
+      
     });
 
     resp.send(result);
 });
 
+function verifyToken(req, resp , next){
+    console.warn(req.headers['authorization'])
+
+    let token = req.headers['authorization'];
+    if(token){
+          token = token.split(' ')[1];
+        Jwt.verify(token, jwtkey, (err, valid) =>{
+            if(err){
+                resp.send("please provide a valid token",err);
+            }else{
+                next();
+            }
+
+        })
+        if(token.length === 2 && token[0] === ''){
+            const token = token[1];
+            req.token = token;
+            next();
+        }else{
+            return resp.status(401).send({error:'Invalid authorization header format'});  
+        }
+    }else{
+        return resp.status(401).send({error:'Authorization header is missing'});
+    }
+        }
+  
 
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true
-        });
-        // console.log("Connected to MongoDB");
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log("Connected to MongoDB successfully  on port :5000");
     } catch (error) {
         console.error("Error connecting to database", error);
     }
 };
 
-app.listen(5000)
+
+connectDB().then(() => {
+    app.listen(5000, () => {
+        console.log('Server is running on port 5000');
+    });
+});
 
 
-// index.js
+
 
