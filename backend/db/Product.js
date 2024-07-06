@@ -1,4 +1,6 @@
-const mongoose = require("./config");
+const mongoose = require("mongoose");
+const config = require('./config');
+
 const multer = require("multer");
 
 const productSchema = new mongoose.Schema({

@@ -1,4 +1,5 @@
-
+require("dotenv").config();
+const dotenv = require('dotenv');
 
 const express = require('express');
 const cors = require("cors");
@@ -6,6 +7,18 @@ const mongoose = require("mongoose");
 require("./db/config");
 const User = require('./db/User');
 const Product = require('./db/Product');
+
+const url = require('url');
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, './.env') });
+
+const BASE_URL = process.env.BASE_URL;
+if (!BASE_URL) {
+  console.error('Error: BASE_URL is not defined in the environment variables.');
+  process.exit(1);
+}
+const parsedUrl = url.parse(BASE_URL);
+const basePath = parsedUrl.path;
 
 const Jwt = require('jsonwebtoken');
 const jwtkey= 'e-comm';
