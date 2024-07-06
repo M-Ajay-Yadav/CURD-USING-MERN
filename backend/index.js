@@ -1,16 +1,22 @@
-require("dotenv").config();
 const dotenv = require("dotenv");
+// require("dotenv").config();
+dotenv.config();
 
 const express = require("express");
+const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-require("./db/config");
+const connectDb = require("./db/config");
+
 const User = require("./db/User");
 const Product = require("./db/Product");
 
 const url = require("url");
 const path = require("path");
 dotenv.config({ path: path.resolve(__dirname, "./.env") });
+
+app.use(express.json());
+app.use(cors());
 
 const BASE_URL = process.env.BASE_URL;
 if (!BASE_URL) {
@@ -23,12 +29,7 @@ const basePath = parsedUrl.path;
 const Jwt = require("jsonwebtoken");
 const jwtkey = "e-comm";
 
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-
-app.post("/register", async (req, resp) => {
+app.post(`${basePath}register`, async (req, resp) => {
   let user = new User(req.body);
   let result = await user.save();
   result = result.toObject();
@@ -43,7 +44,7 @@ app.post("/register", async (req, resp) => {
   });
 });
 
-app.post("/login", async (req, resp) => {
+app.post(`${basePath}login`, async (req, resp) => {
   if (req.body.password && req.body.email) {
     let user = await User.findOne(req.body).select("-password");
     if (user) {
@@ -62,13 +63,13 @@ app.post("/login", async (req, resp) => {
   }
 });
 
-app.post("/add-product", async (req, resp) => {
+app.post(`${basePath}add-product`, async (req, resp) => {
   let product = new Product(req.body);
   let result = await product.save();
   resp.send(result);
 });
 
-app.get("/products", async (req, resp) => {
+app.get(`${basePath}products`, async (req, resp) => {
   try {
     const products = await Product.find();
     if (products.length > 0) {
@@ -82,13 +83,13 @@ app.get("/products", async (req, resp) => {
   }
 });
 
-app.delete("/product/:id", async (req, resp) => {
+app.delete(`${basePath}product/:id`, async (req, resp) => {
   let result = await Product.deleteOne({ _id: req.params.id });
   resp.send(result);
   console.log(result);
 });
 
-app.get("/product/:id", async (req, resp) => {
+app.get(`${basePath}product/:id`, async (req, resp) => {
   let result = await Product.findOne({ _id: req.params.id });
   if (result) {
     resp.send(result);
@@ -98,7 +99,7 @@ app.get("/product/:id", async (req, resp) => {
   }
 });
 
-app.put("/product/:id", async (req, resp) => {
+app.put(`${basePath}product/:id`, async (req, resp) => {
   let result = await Product.updateOne(
     { _id: req.params.id },
     { $set: req.body }
@@ -106,7 +107,7 @@ app.put("/product/:id", async (req, resp) => {
   resp.send(result);
 });
 
-app.get("/search/:key", async (req, resp) => {
+app.get(`${basePath}search/:key`, async (req, resp) => {
   let key = req.params.key;
   let result = await Product.find({
     $or: [
@@ -146,17 +147,13 @@ function verifyToken(req, resp, next) {
   }
 }
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connected to MongoDB successfully  on port :5000");
-  } catch (error) {
-    console.error("Error connecting to database", error);
-  }
-};
-
-connectDB().then(() => {
-  app.listen(5000, () => {
-    console.log("Server is running on port 5000");
+const PORT = process.env.PORT || 5000;
+try {
+  connectDb().then(() => {
+    app.listen(PORT, () => {
+      console.log(`server is running at :${PORT}`);
+    });
   });
-});
+} catch (error) {
+  console.log("server", error);
+}
