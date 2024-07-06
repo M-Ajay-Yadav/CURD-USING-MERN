@@ -18,7 +18,7 @@ dotenv.config({ path: path.resolve(__dirname, "./.env") });
 app.use(express.json());
 app.use(cors());
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || process.env.RENDER_EXTERNAL_URL;
 if (!BASE_URL) {
   console.error("Error: BASE_URL is not defined in the environment variables.");
   process.exit(1);
@@ -27,6 +27,7 @@ console.log(BASE_URL);
 const parsedUrl = url.parse(BASE_URL);
 console.log(parsedUrl, "this is the parsed URl");
 const basePath = parsedUrl.path;
+console.log(basePath, "basePath");
 
 const Jwt = require("jsonwebtoken");
 const jwtkey = "e-comm";
