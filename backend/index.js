@@ -18,7 +18,7 @@ dotenv.config({ path: path.resolve(__dirname, "./.env") });
 app.use(express.json());
 app.use(cors());
 
-const BASE_URL = process.env.BASE_URL || process.env.RENDER_EXTERNAL_URL;
+const BASE_URL = process.env.RENDER_EXTERNAL_URL;
 if (!BASE_URL) {
   console.error("Error: BASE_URL is not defined in the environment variables.");
   process.exit(1);
