@@ -23,7 +23,9 @@ if (!BASE_URL) {
   console.error("Error: BASE_URL is not defined in the environment variables.");
   process.exit(1);
 }
+console.log(BASE_URL);
 const parsedUrl = url.parse(BASE_URL);
+console.log(parsedUrl, "this is the parsed URl");
 const basePath = parsedUrl.path;
 
 const Jwt = require("jsonwebtoken");
